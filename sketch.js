@@ -1,22 +1,23 @@
 const drawings = new Map([
-  ['grid', { draw: grid, name: 'arrange-in-grid' }],
-  ['circle', { draw: circle, name: 'arrange-in-circle' }],
-  ['semi', { draw: semi, name: 'arrange-in-semicircle' }],
-  ['spiral', { draw: spiral, name: 'arrange-in-spiral' }],
+  ["grid", { draw: grid, name: "arrange-in-grid" }],
+  ["circle", { draw: aroundCircle, name: "arrange-in-circle" }],
+  ["semi", { draw: semi, name: "arrange-in-semicircle" }],
+  ["spiral", { draw: spiral, name: "arrange-in-spiral" }],
+  ["fill-circles", { draw: fillCircles, name: "arrange-fill-circle" }],
 ]);
 
 function setup() {
   createCanvas(400, 400, SVG); // Create SVG Canvas
   noStroke();
-  fill('darkseagreen');
+  fill("darkseagreen");
   noLoop();
 }
 
 function draw() {
-  const drawing = drawings.get('spiral');
+  const drawing = drawings.get("fill-circles");
 
   drawing.draw();
-  // save(`${drawing.name}.svg`);
+  save(`${drawing.name}.svg`);
 }
 
 function spiral() {
@@ -37,6 +38,30 @@ function spiral() {
   }
 }
 
+function fillCircles() {
+  translate(width / 2, height / 2);
+
+  let radius = 150;
+  let itemSize = 8;
+  let spacing = 2;
+
+  let totalSize = itemSize + spacing; // Diameter of each small circle
+  let step = Math.floor(radius / totalSize);
+
+  for (let j = 0; j < step; j++) {
+    let r = radius - step * j;
+    let numCircles = Math.round((TWO_PI * r) / totalSize);
+    for (let i = 0; i < numCircles; i++) {
+      let x = r * cos(i * (TWO_PI / numCircles));
+      let y = r * sin(i * (TWO_PI / numCircles));
+      ellipse(x, y, itemSize, itemSize);
+    }
+  }
+
+  // final central circle
+  ellipse(0, 0, itemSize, itemSize);
+}
+
 function semi() {
   translate(width / 2, height / 2);
 
@@ -53,7 +78,7 @@ function semi() {
   }
 }
 
-function circle() {
+function aroundCircle() {
   translate(width / 2, height / 2);
   let numItems = 8;
   let radius = 100;
